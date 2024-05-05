@@ -5,6 +5,15 @@
 - Candidate must score more than 70 percent in the Basic Python course
 - This course is heavy on Python, so students should be proficient in Python development.
 
+## Week 0: Refresher on Python Basics
+
+- Variables and data types
+- Operators and expressions
+- Control flow (if-else, loops)
+- Functions and modules
+- Lists, tuples, dictionaries
+- **Programming Riddles**
+
 ## Week 1-2: Introduction to Python and Multithreading
 
 - Revision of Python programming language
