@@ -3,6 +3,9 @@
 Here is the course outline:
 [Course Outline](./course_outline/README.md)
 
+Refresh your knowledge of the basics of Python programming by some coding challenges:
+[Refresher](./refresher/README.md)
+
 Tools and Libraries:
 
 - [Python](https://www.python.org/)
