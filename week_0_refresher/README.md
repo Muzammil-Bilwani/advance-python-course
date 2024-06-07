@@ -270,3 +270,144 @@ Difference between Lists and Tuples:
 
 - How do you add an element to a specific position in a list?
 - Explain how you can sort a list of tuples based on the second element.
+
+## Answers
+
+### Variables and Data Types
+
+- What is the difference between mutable and immutable data types? Provide examples.
+
+  - Mutable data types can be changed after their creation, whereas immutable data types cannot. Examples:
+
+        - Mutable: list, dict, set
+        - Immutable: int, float, str, tuple
+
+- How would you convert a string to an integer in Python?
+
+```python
+    s = "123"
+    num = int(s)
+    print(num) # Output: 123
+```
+
+- Explain the difference between None, 0, and "" in Python.
+
+  - None is a special constant in Python that represents the absence of a value or a null value.
+  - 0 is an integer value representing zero.
+  - "" is an empty string, which is a sequence of characters of length zero.
+
+### Operators and Expressions
+
+- What is the difference between == and is operators in Python?
+
+  - == checks for value equality, i.e., whether the values of two objects are equal.
+  - is checks for reference equality, i.e., whether two references point to the same object in memory.
+
+- How do you perform floor division in Python? Provide an example.
+
+  - Floor division can be performed using the // operator.
+
+```python
+result = 7 // 3
+print(result) # Output: 2
+```
+
+- What will be the result of the expression 2 ** 3 ** 2 and why?
+
+  - The expression 2 ** 3 ** 2 is evaluated as 2 ** (3 ** 2), which is 2 \*\* 9 = 512.
+
+```python
+result = 2 ** 3 ** 2
+print(result) # Output: 512
+```
+
+Control Flow (if-else, loops)
+How would you use a for loop to iterate over a dictionary in Python?
+
+```python
+my_dict = {'a': 1, 'b': 2, 'c': 3}
+
+# Iterating over keys
+for key in my_dict:
+    print(f"Key: {key}, Value: {my_dict[key]}")
+
+# Iterating over key-value pairs
+for key, value in my_dict.items():
+    print(f"Key: {key}, Value: {value}")
+```
+
+- What is the difference between break, continue, and pass statements in loops?
+
+  - break: Exits the loop immediately.
+  - continue: Skips the current iteration and moves to the next iteration.
+  - pass: Does nothing; it acts as a placeholder.
+
+```python
+    for i in range(5):
+        if i == 2:
+            break  # Loop stops when i is 2
+        print(i)
+
+    for i in range(5):
+        if i == 2:
+            continue  # Skip the rest of the code inside the loop for this iteration
+        print(i)
+
+    for i in range(5):
+        if i == 2:
+            pass  # Do nothing
+        print(i)
+
+```
+
+### Functions and Modules
+
+- How do you define a function with default parameters in Python?
+
+```python
+def greet(name, message="Hello"):
+    return f"{message}, {name}!"
+
+print(greet("Alice"))  # Output: Hello, Alice!
+print(greet("Bob", "Hi"))  # Output: Hi, Bob!
+```
+
+- Explain how you would import a specific function from a module in Python.
+
+```python
+# Assuming mymodule.py contains a function called add
+# mymodule.py
+def add(a, b):
+    return a + b
+
+# main.py
+
+from mymodule import add
+
+result = add(5, 3)
+print(result) # Output: 8
+
+```
+
+## Lists, Tuples, Dictionaries
+
+- How do you add an element to a specific position in a list?
+
+```python
+numbers = [1, 2, 4, 5]
+numbers.insert(2, 3)  # Insert 3 at index 2
+print(numbers)  # Output: [1, 2, 3, 4, 5]
+
+```
+
+- Explain how you can sort a list of tuples based on the second element.
+
+```python
+# List of tuples
+students = [("Alice", 25), ("Bob", 20), ("Charlie", 23)]
+
+# Sort based on the second element (age)
+sorted_students = sorted(students, key=lambda student: student[1])
+print(sorted_students)  # Output: [('Bob', 20), ('Charlie', 23), ('Alice', 25)]
+
+```
