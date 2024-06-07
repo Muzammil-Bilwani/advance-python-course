@@ -1,4 +1,4 @@
-# Advanced Python Course Outline
+# Advanced Python Course Outline Detailed
 
 ## Prerequisite:
 
