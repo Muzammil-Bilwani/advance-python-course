@@ -5,7 +5,7 @@
 - Candidate must score more than 70 percent in the Basic Python course
 - This course is heavy on Python, so students should be proficient in Python development.
 
-## Week 0: Refresher on Python Basics
+## Week 1: Refresher on Python Basics
 
 - Variables and data types
 - Operators and expressions
@@ -13,16 +13,9 @@
 - Functions and modules
 - Lists, tuples, dictionaries
 - **Programming Riddles**
+- **Assignment**
 
-## Week 1-2: Introduction to Python and Multithreading
-
-- Revision of Python programming language
-- Introduction to multithreading
-- Basics of threading module
-- Thread synchronization and locks
-- Practical exercises and assignments
-
-## Week 3: Working with Automated Tasks
+## Week 2: Working with Automated Tasks
 
 - Sending Emails with Python using SMTP
 - Working with the datetime Module
@@ -30,14 +23,14 @@
 - Automated Birthday Wisher Project Challenge
 - Solution & Walkthrough for the Automated Birthday Wishes
 
-## Week 4: Working with Google Sheets and Python for Automation Tasks
+## Week 3: Working with Google Sheets and Python for Automation Tasks
 
 - Setup API Credentials and Google Spreadsheet
 - Get Exercise Stats with Natural Language Queries
 - Setup Your Google Sheet with Sheety
 - Saving Data into Google Sheets
 
-## Week 5: Lambda Functions
+## Week 4: Lambda Functions
 
 - Introduction to lambda functions in Python
 - Syntax and basic usage
@@ -45,7 +38,7 @@
 - Lambda functions with map, filter, reduce
 - Practical examples and assignments
 
-## Week 6-7: Introduction to Django Framework
+## Week 5-6: Introduction to Django Framework
 
 - Overview of Django framework
 - Understanding the history and purpose of Django
@@ -71,7 +64,7 @@
 - Implementing CRUD (Create, Read, Update, Delete) operations
 - Developing interactive web pages using Django templates and views
 
-## Week 8-9: Advanced Django
+## Week 7-8: Advanced Django
 
 - Django ORM (Object-Relational Mapping)
 - Understanding ORM and its role in Django
@@ -98,7 +91,7 @@
 - Working on real-world scenarios and problem-solving exercises
 - Presenting and reviewing project outcomes and codebases
 
-## Week 10-11: Database Integration in Django
+## Week 9-10: Database Integration in Django
 
 - Database fundamentals
 - Understanding relational database concepts
@@ -124,6 +117,14 @@
 - Building a database-driven Django application from scratch
 - Implementing advanced database features and optimizations
 - Deploying the application to a production environment and testing scalability
+
+## Week 11: Introduction to Python and Multithreading
+
+- Revision of Python programming language
+- Introduction to multithreading
+- Basics of threading module
+- Thread synchronization and locks
+- Practical exercises and assignments
 
 ## Week 12: Web Scraping Basics
 
