@@ -315,6 +315,8 @@ s.sendmail("<SENDER_EMAIL>", "<RECEIPT_EMAIL>", message)
 s.quit()
 ```
 
+Reference: https://www.sitepoint.com/quick-tip-sending-email-via-gmail-with-python/
+
 ### Automated Birthday Wisher Project Challenge
 
 Creating an Automated Birthday Wisher project in Python using SMTP and Gmail involves the following steps:
