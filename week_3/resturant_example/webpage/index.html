@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>Clucker!</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.11.0/underscore-min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
+<script src="main.js"></script>
+<script id="menu-template" type="text/x-handlebars-template">
+<div class="container">
+	<div class="row text-center">
+		<div class="col-lg-6 offset-lg-3">
+			<h1 class="logo mb-2">&#128020;<br>Clucker!</h1>
+			<p>Our British chicken is fresh, never frozen and marinated in PERi-PERi for 24 hours before being flame-grilled.</p>
+		</div>
+	</div>
+	<div class="row">
+		{{#each this as |category|}}
+			<div class="col-md-6">
+				<div class="category">
+					<h3 class="mb-4 mt-2">{{@key}}</h3>
+					<ul class="list-unstyled">
+						{{#each this as |item|}}
+							<li class="item d-flex align-items-center mb-3">
+								<div class="name">{{item.item}}</div>
+								{{#if item.isVegetarian}}
+									<div class="v">V</div>
+								{{/if}}
+								<div class="price ml-auto">&pound;{{item.price}}</div>
+							</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+		{{/each}}
+	</div>
+</div>
+</script>
+</head>
+<body>
+	<div class="container" id="menu">Loading menu...</div>
+</body>
+</html>

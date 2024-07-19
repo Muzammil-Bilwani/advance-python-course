@@ -1,40 +1,3 @@
-## Week 3: Working with Sheety API, Google Sheets and Python for Automation Tasks
-
-### Sheety: https://sheety.co/
-
-- Visit Sheety website
-- Setup Sheety API Credentials and Google Spreadsheet
-- Create a new Google Spreadsheet
-- Create project in Sheety and get the API key
-- Use the API key to access the Google Spreadsheet
-
-Sample Request:
-
-```python
-import requests
-
-SHEETY_ENDPOINT = "https://api.sheety.co/your_project_name/sheet_name"
-
-
-response = requests.get(url=SHEETY_ENDPOINT)
-data = response.json()
-print(data)
-```
-
-### Automated Inventory Replenishment
-
-Monitor inventory levels and automatically place orders for items that fall below a certain threshold. Track orders and update inventory upon receiving new stock.
-
-#### Steps:
-
-- Set up a Google Sheet with columns for item name, current stock, reorder threshold, and supplier email.
-- Use Sheety to create an API for the Google Sheet.
-- Write a Python script to monitor inventory levels and send order emails when necessary.
-- Update inventory levels when new stock is received.
-
-##### Code Example
-
-```python
 import requests
 import smtplib
 
@@ -83,4 +46,3 @@ if __name__ == "__main__":
             # Assuming we received the new stock immediately for simplicity
             new_stock = item['current_stock'] + 100
             update_inventory(item['id'], new_stock)
-```
