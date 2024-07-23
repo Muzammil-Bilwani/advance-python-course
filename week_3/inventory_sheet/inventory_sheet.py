@@ -25,24 +25,11 @@ def send_order_email(to_address, item):
         server.sendmail(from_address, to_address, message)
         print(f"Order email sent to {to_address} for {item['name']}")
 
-def update_inventory(item_id, new_stock):
-    url = f"{SHEETY_API_URL}/{item_id}"
-    data = {
-        "inventory": {
-            "current_stock": new_stock
-        }
-    }
-    response = requests.put(url, json=data)
-    if response.status_code == 200:
-        print(f"Updated stock of item ID {item_id} to {new_stock}")
-    else:
-        print(f"Failed to update stock of item ID {item_id}:", response.text)
-
 if __name__ == "__main__":
     inventory = fetch_inventory()
     for item in inventory:
         if item['current_stock'] <= item['reorder_threshold']:
             send_order_email(item['supplier_email'], item)
             # Assuming we received the new stock immediately for simplicity
-            new_stock = item['current_stock'] + 100
-            update_inventory(item['id'], new_stock)
+            # new_stock = item['current_stock'] + 100
+            # update_inventory(item['id'], new_stock)
