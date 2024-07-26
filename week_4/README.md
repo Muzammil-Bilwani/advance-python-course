@@ -187,4 +187,4 @@ print(sum_filtered)  # Output: 66
 - Question: Given a list of numbers [2, 4, 6, 8, 10], first use the map function and a lambda function to double each number. Then, use the reduce function to find the product of the doubled numbers.
 
   - Input: [2, 4, 6, 8, 10]
-  - Expected Output: 46080 (Product of [4, 8, 12, 16, 20])
+  - Expected Output: 122880 (Product of [4, 8, 12, 16, 20])
