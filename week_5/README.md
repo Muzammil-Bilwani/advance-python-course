@@ -249,7 +249,7 @@ pip install django
 To create a new Django project, use the `django-admin` command:
 
 ```bash
-django-admin startproject myproject
+python -m django startproject myproject
 cd myproject
 ```
 
@@ -408,3 +408,5 @@ python manage.py runserver
 ```
 
 Visit `http://127.0.0.1:8000/books/` to see the list of books.
+
+**_PLEASE REFER TO [myfirstapp](./myfirstapp) FOR THE CODE EXAMPLE._**
