@@ -219,7 +219,6 @@ The views.py file contains the view functions that handle the requests.
 The urls.py file maps the URL patterns to the corresponding view functions.
 Middleware-like behavior is simulated using lambdas to sequentially call functions in the URL patterns.
 
-
 # Overview of Django Framework
 
 Django is a high-level Python web framework that enables the rapid development of secure and maintainable websites. It was designed to help developers take applications from concept to completion as quickly as possible.
@@ -344,8 +343,8 @@ from django.shortcuts import render
 from .models import Book
 
 def book_list(request):
-books = Book.objects.all()
-return render(request, 'books/book_list.html', {'books': books})
+    books = Book.objects.all()
+    return render(request, 'books/book_list.html', {'books': books})
 
 ```
 
@@ -395,6 +394,13 @@ In `books/templates/books/book_list.html:`
 </html>
 ```
 
+##### Run Migration
+
+```bash
+python manage.py makemigrations books
+python manage.py migrate
+```
+
 #### Running the Server
 
 ```bash
@@ -402,4 +408,3 @@ python manage.py runserver
 ```
 
 Visit `http://127.0.0.1:8000/books/` to see the list of books.
-
