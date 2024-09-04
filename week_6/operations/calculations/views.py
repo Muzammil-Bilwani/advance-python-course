@@ -126,7 +126,7 @@ def split_with_shareditems(request):
             count = 0
         return JsonResponse({'Total_amount_after_adding_tip_and_tax_and_prices_of_all_items':amount,'split':split})
 
-# For last function Please enter input in this form:
+# For last function (split_with_shareditems) Please enter input in this form:
 # {
 #   "tip":5,
 #   "tax":20,
