@@ -4,73 +4,6 @@ from typing import TypeAlias
 import json
 
 
-# Example Input:
-'''
-{
-    "user_ids": ['1:', '2:', '3'],
-    "items": [
-        {"name": "Item A", "price": 30, "shared_user_ids": [1, 2]},
-        {"name": "Item B", "price": 45, "shared_user_ids": [2, 3]},
-        {"name": "Item C", "price": 60, "shared_user_ids": [1, 2, 3]}
-    ],
-    "tip_percentage": 15,  # Tip percentage
-    "tax_percentage": 8    # Tax percentage,
-    "discount_percentage": 5
-}
-'''
-
-# Example Output:
-'''
-{
-  "expense_per_user": {
-    "1": 55.7,
-    "2": 88.55000000000001,
-    "3": 63.2
-  },
-  "per_item_user_expense": {
-    "1": [
-      {
-        "item_name": "Item A",
-        "item_price": 15.0
-      },
-      {
-        "item_name": "Item C",
-        "item_price": 20.0
-      }
-    ],
-    "2": [
-      {
-        "item_name": "Item A",
-        "item_price": 15.0
-      },
-      {
-        "item_name": "Item B",
-        "item_price": 22.5
-      },
-      {
-        "item_name": "Item C",
-        "item_price": 20.0
-      }
-    ],
-    "3": [
-      {
-        "item_name": "Item B",
-        "item_price": 22.5
-      },
-      {
-        "item_name": "Item C",
-        "item_price": 20.0
-      }
-    ],
-    "total_price": 135
-  },
-  "tip_amount": 20.25,
-  "tax_amount": 10.8,
-  "total_expense_with_tips_and_tax": 166.05
-}
-'''
-
-
 # Create your views here.
 
 
@@ -182,3 +115,72 @@ def splitWIthSharedItems(request):
         print(f"An error occurred:", e)
         # return error with status code 500
         return JsonResponse({'error': f'An error occurred: {e}'}, status=500)
+
+
+# The example input and output is taken from the ChatGPT!
+
+# Example Input:
+'''
+{
+    "user_ids": ['1:', '2:', '3'],
+    "items": [
+        {"name": "Item A", "price": 30, "shared_user_ids": [1, 2]},
+        {"name": "Item B", "price": 45, "shared_user_ids": [2, 3]},
+        {"name": "Item C", "price": 60, "shared_user_ids": [1, 2, 3]}
+    ],
+    "tip_percentage": 15,  # Tip percentage
+    "tax_percentage": 8    # Tax percentage,
+    "discount_percentage": 5
+}
+'''
+
+# Example Output:
+'''
+{
+  "expense_per_user": {
+    "1": 55.7,
+    "2": 88.55000000000001,
+    "3": 63.2
+  },
+  "per_item_user_expense": {
+    "1": [
+      {
+        "item_name": "Item A",
+        "item_price": 15.0
+      },
+      {
+        "item_name": "Item C",
+        "item_price": 20.0
+      }
+    ],
+    "2": [
+      {
+        "item_name": "Item A",
+        "item_price": 15.0
+      },
+      {
+        "item_name": "Item B",
+        "item_price": 22.5
+      },
+      {
+        "item_name": "Item C",
+        "item_price": 20.0
+      }
+    ],
+    "3": [
+      {
+        "item_name": "Item B",
+        "item_price": 22.5
+      },
+      {
+        "item_name": "Item C",
+        "item_price": 20.0
+      }
+    ],
+    "total_price": 135
+  },
+  "tip_amount": 20.25,
+  "tax_amount": 10.8,
+  "total_expense_with_tips_and_tax": 166.05
+}
+'''
