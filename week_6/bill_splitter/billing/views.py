@@ -47,12 +47,14 @@ def splitWIthSharedItems(request):
             # It will 1st collect all items price in a list and then we total them by sum()
             total_price = sum([item['price'] for item in items])
 
-            ''' ----- Formula to calculate portion amount ------ '''
+            '''
+            ----- Formula to calculate portion amount ------ 
 
-            # portion_amount = total_amount * decimal value of percentage
-            # portion_amount = total_amount * (percentage / 100)
+            portion_amount = total_amount * decimal value of percentage
+            portion_amount = total_amount * (percentage / 100)
 
-            ''' ----- Formula Ends ------ '''
+            ------- Formula Ends ------ 
+            '''
 
             # tax_amount -or- tax's portion in total price amount = (total_price * tax_percentage's decimal value)
             tax_amount = total_price * tax_percentage_decimal
