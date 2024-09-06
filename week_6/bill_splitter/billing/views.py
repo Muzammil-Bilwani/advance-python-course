@@ -7,107 +7,159 @@ import json
 # Create your views here.
 
 
+'''
+# Example Input:
+
+  {
+    "user_ids": ['1:', '2:', '3'],
+    "items_with_prices": [
+        {"Item A": 30},
+        {"Item B": 45},
+        {"Item C": 60},
+    ]
+    "sharing_details": {
+      "Item_A": ['1', 2]
+      },
+      "Item_B": ['2', '3']
+      },
+      "Item_C": ['1', '2', '3']
+      },
+    },
+    "tip_percentage": 15,  # Tip percentage
+    "tax_percentage": 8    # Tax percentage,
+    "discount_percentage": 5 # Discount percentage
+  }
+'''
+
+
 @csrf_exempt
 def splitWIthSharedItems(request):
     # Code goes here
     try:
+        # Define Types for Variables
+
+        UserIds: TypeAlias = list[str]
+        ItemsWithPrices: TypeAlias = list[dict[str, float]]
+        Sharing_Details: TypeAlias = dict[str, dict[str, list[str]]]
+        Tip: TypeAlias = float
+        Tax: TypeAlias = float
+        Discount: TypeAlias = float
+
+        ExpensePerUser: TypeAlias = dict[str, float]
+        ExpensePerUserDetails: TypeAlias = dict[str,
+                                                list[dict[str, str | float]]]
+
+        BillingDetails: TypeAlias = dict[str, UserIds |
+                                         ItemsWithPrices | Sharing_Details | Tip | Tax | Discount]
+
         # Check if request method is POST
         if request.method == 'POST':
-
-            # Define the types
-
-            BillingDetails: TypeAlias = dict[str,
-                                             int | str | list[dict[str, int | str]]]
-            Items: TypeAlias = list[dict[str, str | float, list[str]]]
-            UserIds: TypeAlias = list[str]
-
-            # Getting billing details from request
+            # Fetching Billing Details From The Request
             billing_details: BillingDetails = json.loads(request.body)
 
-            # Unpacking billing details
-            user_ids: UserIds = billing_details['user_ids']
-            items: Items = billing_details['items']
-            tip_percentage = billing_details['tip_percentage']
-            tax_percentage = billing_details['tax_percentage']
-            discount_percentage = billing_details['discount_percentage']
+            # getting Deatils From Billing Details
+            user_ids: UserIds = billing_details.get('user_ids')
+            items_with_prices: ItemsWithPrices = billing_details.get(
+                'items_with_prices')
+            sharing_details: Sharing_Details = billing_details.get(
+                'sharing_details')
+            tip_percentage: Tip = billing_details.get('tip_percentage')
+            tax_percentage: Tax = billing_details.get('tax_percentage')
+            discount_percentage: Discount = billing_details.get(
+                'discount_percentage')
 
-            # Calculating number of user
-            num_of_user = len(user_ids)
+            num_of_users = len(user_ids)
+            num_of_items = len(items_with_prices)
 
-            # Initializing dictionary to store expense per user
-            expense_per_user = {user_id: 0 for user_id in user_ids}
-            # Initializing dictionary to store expense per item a user is sharing
-            per_item_user_expense = {user_id: [] for user_id in user_ids}
-
-            # Converting percentages to decimal
+            # Converting Tip, Tax & Discount to Decimal
             tip_percentage_decimal = tip_percentage / 100
             tax_percentage_decimal = tax_percentage / 100
             discount_percentage_decimal = discount_percentage / 100
 
-            # It will 1st collect all items price in a list and then we total them by sum()
-            total_price = sum([item['price'] for item in items])
+            # Calculating Total Price Of All Items In The Bill By 1st Collecting Price Of Each Item In A List & Summing Up The Price Of All Items In The List Through sum()
+            total_price = sum(
+                [
+                    price_to_item[item]
+                    for price_to_item in items_with_prices
+                    for item in price_to_item
+                ]
+            )
 
             '''
-            ----- Formula to calculate portion amount ------ 
-
-            portion_amount = total_amount * decimal value of percentage
-            portion_amount = total_amount * (percentage / 100)
-
-            ------- Formula Ends ------ 
+            Formula For Calculating a Portion Amount From Total Amount According To Percentage:
+            portion amount = total amount * percentage/100
+            ----OR----
+            portion amount = total amount * percentage's decimal value
             '''
 
-            # tax_amount -or- tax's portion in total price amount = (total_price * tax_percentage's decimal value)
-            tax_amount = total_price * tax_percentage_decimal
-            # Distributing tax amount among all users
-            tax_per_user = tax_amount/num_of_user
-
-            # tip_amount -or- tip's portion in total price amount = (total_price * tip_percentage's decimal value)
+            # Calculating the Tip, Tax & Discount Amount From Total Price & Calculating The Amount For Each User By Dividing These Amounts By Number Of Users
             tip_amount = total_price * tip_percentage_decimal
-            # Distributing tip amount among all users
-            tip_per_user = tip_amount/num_of_user
+            tip_per_user = tip_amount / num_of_users
 
-            # discount_amount -or- discount's portion in total price amount = (total_price * discount_percentage's decimal value)
+            tax_amount = total_price * tax_percentage_decimal
+            tax_per_user = tax_amount / num_of_users
+
             discount_amount = total_price * discount_percentage_decimal
-            # Distributing tip amount among all users
-            discount_per_user = discount_amount/num_of_user
+            discount_per_item = discount_amount / num_of_items
 
-            # Calculating total expense by adding tips and tax amount in total price
-            total_expense = (total_price-discount_amount) + \
-                (tip_amount+tax_amount)
+            # Initializing Expense / User with 0
+            expense_per_user: ExpensePerUser = {
+                user_id: 0 for user_id in user_ids}
 
-            # Looping through all items to calculate expense per user and per item user expense
-            for item in items:
-                # Calculating number of shared users on the item
-                num_of_shared_users = len(item['shared_user_ids'])
-                # Calculating item price per shared user
-                item_price_per_user = (item['price'] / num_of_shared_users)
+            # Initializing Expense / User Details with []
+            expense_per_user_details: ExpensePerUserDetails = {
+                user_id: [] for user_id in user_ids}
 
-                # Looping through all shared users
-                for user_id in item['shared_user_ids']:
-                    # Collecting expense per user by adding item price per user and tips and tax amount per user
-                    expense_per_user[user_id] += (item_price_per_user - discount_per_user) + (
-                        tip_per_user + tax_per_user)
+            # Loop Through Sharing Details to Calculate Expense Per User & Add Details To expense_per_user_details
+            for shared_item in sharing_details:
+                # Get Shared User Ids
+                shared_user_ids = sharing_details[shared_item]
+                # Initialize Item Price
+                item_price = 0
 
-                # Collecting item details containing item name and item price per user
-                    item_details = {
-                        "item_name": item['name'], 'item_price': item_price_per_user}
-                    # appending item details in per_item_user_expense
-                    per_item_user_expense[user_id].append(item_details)
+                # Loop Through Items With Prices to Fetch Item Price & Reduce Item Price By Discount
+                for price_to_item in items_with_prices:
+                    # Check If Item Is Shared
+                    if price_to_item.get(shared_item) != None:
+                        # Update Item Price
+                        item_price = price_to_item[shared_item] - \
+                            discount_per_item
+                        # Break Loop Because The Item Price Is Fetched & Updated
+                        break
 
-            # Putting total price in per_item_user_expense
-            per_item_user_expense['total_price'] = total_price
+                # Calculate Price Per User By Dividing Item Price By Number Of Shared Users
+                price_per_user = item_price / len(shared_user_ids)
 
-            # Returning splitted bill with all details including, expense per user, per item user expense, tip amount, tax amount, total expense
+                # Loop Through Shared User Ids To Update Expense Per User & Add Details To expense_per_user_details
+                for user_id in shared_user_ids:
+                    # Calculating Expense Per User By Adding Tip & Tax Per User to Price Per User
+                    expense_per_user[user_id] += price_per_user + \
+                        (tip_per_user + tax_per_user)
+
+                    # Add Details To expense_per_user_details
+                    expense_per_user_details[user_id].append(
+                        {
+                            "item_name": shared_item,
+                            "item_price": item_price + discount_per_item,
+                        }
+                    )
+
+                expense_per_user_details["discount_per_item"] = discount_per_item
+                expense_per_user_details["tip_per_user"] = tip_per_user
+                expense_per_user_details["tax_per_user"] = tax_per_user
+
+            # Formulating Bill with details, including each user's expense expense_per_user, breakdown of expenses per user expense_per_user_details, total price total_price, discount amount discount_amount, tip amount tip_amount, tax amount tax_amount, and the final total total_expense_with_tip_&_tax_amount_after_discount after applying discounts, tips, and taxes.
             splitted_bill = {
-                'expense_per_user': expense_per_user,
-                'per_item_user_expense': per_item_user_expense,
-                'discount_amount': discount_amount,
-                'tip_amount': tip_amount,
-                'tax_amount': tax_amount,
-                'total_expense_with_discount_and_tip_and_tax_amount': total_expense,
+                "expense_per_user": expense_per_user,
+                "expense_per_user_details": expense_per_user_details,
+                "total_price": total_price,
+                "discount_amount": discount_amount,
+                "tip_amount": tip_amount,
+                "tax_amount": tax_amount,
+                "total_expense_with_tip_&_tax_amount_after_discount": (total_price - discount_amount) + (tip_amount + tax_amount)
             }
 
-            # Returning json-response with splitted bill and status code 200
+            # Return splitted bill with status code 200
             return JsonResponse(splitted_bill, status=200)
 
         # If request method is not POST, Return error with status code 400
@@ -119,23 +171,6 @@ def splitWIthSharedItems(request):
         return JsonResponse({'error': f'An error occurred: {e}'}, status=500)
 
 
-# The example input and output is taken from the ChatGPT!
-
-# Example Input:
-'''
-{
-    "user_ids": ['1:', '2:', '3'],
-    "items": [
-        {"name": "Item A", "price": 30, "shared_user_ids": [1, 2]},
-        {"name": "Item B", "price": 45, "shared_user_ids": [2, 3]},
-        {"name": "Item C", "price": 60, "shared_user_ids": [1, 2, 3]}
-    ],
-    "tip_percentage": 15,  # Tip percentage
-    "tax_percentage": 8    # Tax percentage,
-    "discount_percentage": 5
-}
-'''
-
 # Example Output:
 '''
 {
@@ -144,7 +179,7 @@ def splitWIthSharedItems(request):
     "2": 88.55000000000001,
     "3": 63.2
   },
-  "per_item_user_expense": {
+  "expense_per_user_details": {
     "1": [
       {
         "item_name": "Item A",
@@ -183,6 +218,6 @@ def splitWIthSharedItems(request):
   },
   "tip_amount": 20.25,
   "tax_amount": 10.8,
-  "total_expense_with_tips_and_tax": 166.05
+  "total_expense_with_tips_&_tax": 166.05
 }
 '''
