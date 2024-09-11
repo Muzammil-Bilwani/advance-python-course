@@ -1,4 +1,4 @@
-## Week 5: Introduction to Django Framework
+## Week 5 and 6: Introduction to Django Framework
 
 ### REST API
 

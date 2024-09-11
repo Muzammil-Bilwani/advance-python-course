@@ -1,4 +1,4 @@
-# Week 7 - Database Integration in Django
+# Week 9 and 10 - Database Integration in Django
 
 ## 1. Databases
 
