@@ -129,41 +129,223 @@
     - **Reduced Disk I/O**: Indexes can reduce the amount of data that needs to be read from disk.
     - **Optimized Performance**: Queries that use indexes can be significantly faster than full table scans.
 
-Lets do some coding:
+#### Lets do some coding
 
-```python
-# models.py
+To create a Django REST API with MongoDB using mongoengine instead of the default Django ORM, you'll need to adjust the project to use MongoDB as your database. Here's how to implement the Book model, along with CRUD operations for GET, POST, PUT, and DELETE using mongoengine and Django Rest Framework (DRF).
 
-from mongoengine import Document, StringField, IntField
+##### Step 1: Install the Required Packages
 
-class Book(Document):
-    title = StringField(required=True)
-    author = StringField(required=True)
-    year = IntField()
+First, install the necessary packages for Django, mongoengine, and Django Rest Framework.
 
-# views.py
-
-from .models import Book
-
-def create_book(request):
-    book = Book(title="Django for Beginners", author="William Vincent", year=2020)
-    book.save()
-    return HttpResponse("Book created successfully!")
-
-def get_books(request):
-
-    # Get all books
-    books = Book.objects()
-
-    return JsonResponse({"books": books})
+```bash
+pip install django mongoengine djangorestframework djongo
 ```
 
-#### Add mongo atlas URL for mongoengine
+##### Step 2.1: Create a Django Project and App
+
+Create a new Django project and app using the following commands:
+
+```bash
+python -m django startproject bookstore
+cd bookstore
+python manage.py startapp books
+```
+
+##### Step 2.2: Configure MongoDB Connection
+
+In the `settings.py` file of your Django project, configure the MongoDB connection using the `DATABASES` setting. Replace the default SQLite configuration with the following:
 
 ```python
-from mongoengine import *
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'bookstore',
+    }
+}
 
-connect('MONGO_URL')
+MONGODB_SETTINGS = {
+    'db': 'your_mongo_db_name',
+    'host': 'localhost',
+    'port': 27017,
+}
+```
 
+if you are using srv connection string then you can use the following configuration
 
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'bookstore',
+    }
+}
+
+MONGODB_DATABASES = {
+    'default': {
+        'name': 'your_mongo_db_name',
+        'host': 'your_mongo_db_connection_string',
+        'username': 'your_mongo_db_username',
+        'password': 'your_mongo_db_password',
+        'authentication_source': 'admin',
+    }
+}
+```
+
+##### Step 3: Define the Book Model
+
+Create a `models.py` file in the `books` app and define the `Book` model using mongoengine.
+
+```python
+# books/models.py
+import mongoengine as me
+
+class Book(me.Document):
+    title = me.StringField(required=True, max_length=200)
+    author = me.StringField(required=True, max_length=100)
+    published_date = me.DateTimeField(required=True)
+
+    def __str__(self):
+        return self.title
+```
+
+Here, me.Document is the base class for mongoengine documents, and fields like StringField and DateTimeField are used for creating schema definitions.
+
+##### Step 4: Create Serializers for the Book Model
+
+Next, create serializers for the Book model using Django Rest Framework.
+
+```python
+
+# books/serializers.py
+from rest_framework import serializers
+from .models import Book
+
+class BookSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
+    title = serializers.CharField(max_length=200)
+    author = serializers.CharField(max_length=100)
+    published_date = serializers.DateField()
+
+    def create(self, validated_data):
+        return Book(**validated_data).save()
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.author = validated_data.get('author', instance.author)
+        instance.published_date = validated_data.get('published_date', instance.published_date)
+        instance.save()
+        return instance
+```
+
+##### Step 5: Create Views for CRUD Operations
+
+Create views for performing CRUD operations on the Book model using Django Rest Framework.
+
+```python
+# books/views.py
+from rest_framework import viewsets
+from .models import Book
+from .serializers import BookSerializer
+
+class BookViewSet(viewsets.ViewSet):
+    def list(self, request):
+        books = Book.objects.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        book = Book.objects.get(id=pk)
+        serializer = BookSerializer(book)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = BookSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+    def update(self, request, pk=None):
+        book = Book.objects.get(id=pk)
+        serializer = BookSerializer(book, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    def destroy(self, request, pk=None):
+        book = Book.objects.get(id=pk)
+        book.delete()
+        return Response(status=204)
+```
+
+##### Step 6: Register the Views in the URLs
+
+Finally, register the BookViewSet in the `urls.py` file of the `books` app.
+
+```python
+
+# books/urls.py
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import BookViewSet
+
+router = DefaultRouter()
+router.register(r'books', BookViewSet, basename='book')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
+```
+
+Then, include this in your project's urls.py:
+
+```python
+
+# bookstore/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('books.urls')),
+]
+```
+
+##### Step 7: Run the Server and Test the API
+
+Run the Django development server using the following command:
+
+```bash
+python manage.py runserver
+```
+
+You can now test the API endpoints for CRUD operations on the Book model using tools like Postman or curl.
+
+##### Step 8: Example API Requests
+
+Here are some example API requests you can make to test the CRUD operations:
+
+- **GET /api/books/**: Retrieve a list of all books.
+- **GET /api/books/{id}/**: Retrieve a specific book by ID.
+- **POST /api/books/**: Create a new book.
+- **PUT /api/books/{id}/**: Update an existing book.
+- **DELETE /api/books/{id}/**: Delete a book by ID.
+
+- Create a new book (POST)
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/books/ \
+-H "Content-Type: application/json" \
+-d '{
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "published_date": "1925-04-10"
+}'
+```
+
+- Get all books (GET)
+
+```bash
+curl http://127.0.0.1:8000/api/books/
 ```
