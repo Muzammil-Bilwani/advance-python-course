@@ -120,7 +120,6 @@
 
 ## Week 11: Introduction to Python and Multithreading
 
-- Revision of Python programming language
 - Introduction to multithreading
 - Basics of threading module
 - Thread synchronization and locks
